@@ -5,7 +5,6 @@ body {
     background-image: url(saya3.JPEG);
     background-repeat: no-repeat;
     background-size: cover;
-
 }
 
 header {
@@ -103,4 +102,17 @@ section {
 }
 form {
     color : #ffc0e2;
+}
+
+@media (max-width: 600px) {
+    body {
+        background-image: url(saya4.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top center;
+    }
+    section {
+        flex-direction: column;
+        gap: 4px;
+    }
 }
