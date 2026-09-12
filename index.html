@@ -1,40 +1,70 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/webstorm-icon-logo.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WS playground</title>
-  <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-<header class="logo">
-  <a href="https://www.jetbrains.com/webstorm/">
-    <img src="/webstorm-logo.svg" alt="WebStorm logo" width="344"
-         height="90">
-  </a>
-</header>
-<main id="app">
-  <h1 class="title">
-    Thank you for trying it out. <br /> Your first project is up and running
-    now.
-  </h1>
-  <section class="counter">
-    <div class="counter-info">
-      <p class="counter-text">Counter is</p>
-      <p class="counter-value" id="counter-value"></p>
-    </div>
-    <div class="counter-interaction">
-      <button id="increaseByOne" type="button">+1</button>
-      <button id="increaseByTwo" type="button">+2</button>
-      <button id="decreaseByOne" type="button">-1</button>
-      <button id="decreaseByTwo" type="button">-2</button>
-    </div>
-  </section>
-</main>
-<footer class="technologies">
-  <img src="/technologies.svg" alt="List of supported technologies">
-</footer>
-<script type="module" src="/src/main.js"></script>
-</body>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/x-icon" href="загруженное.jpe">
+        <title>Cat</title>
+    </head>
+    <body>
+        <header>
+            <p><a href="https://t.me/catmeonmeoncat" style="text-decoration: none; color: inherit; cursor: pointer;">ФИО: Семенова Елена Вячеславовна</a></p>
+            <p>Группа: P3213</p>
+            <p>Вариант: 12707</p>
+        </header>
+        <section>
+        <div class="cat">
+            <form  id="pointForm">
+                <div>
+                    <span >X:</span>
+                    <label><input type="checkbox" name="x" value="-3"> -3 </label>
+                    <label><input type="checkbox" name="x" value="-2"> -2 </label>
+                    <label><input type="checkbox" name="x" value="-1"> -1 </label>
+                    <label><input type="checkbox" name="x" value="0"> 0 </label>
+                    <label><input type="checkbox" name="x" value="1"> 1 </label>
+                    <label><input type="checkbox" name="x" value="2"> 2 </label>
+                    <label><input type="checkbox" name="x" value="3"> 3 </label>
+                    <label><input type="checkbox" name="x" value="4"> 4 </label>
+                    <label><input type="checkbox" name="x" value="5"> 5 </label>
+
+                </div>
+                <div>
+                    <label for="y-input">Y (от -3 до 5): </label>
+                    <input id="y-input" type="text" required name="y">
+                </div>
+                <div>
+                    <div>
+                        <span>R:</span>
+                        <button type="button" class="r-btn" data-value="1">1</button>
+                        <button type="button" class="r-btn" data-value="2">2</button>
+                        <button type="button" class="r-btn" data-value="3">3</button>
+                        <button type="button" class="r-btn" data-value="4">4</button>
+                        <button type="button" class="r-btn" data-value="5">5</button>
+                    </div>
+                    <div>
+                        <span id="r-hint" style="color: #ffffff;">привет введи радиус</span>
+                    </div>
+                </div>
+                <button id="Change" type="submit" disabled>Нажми</button>
+            </form>
+
+            <canvas id="myCanvas" width="400" height="300"></canvas>
+        </div>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>R</th>
+                        <th>Результат</th>
+                        <th>Дата и время</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </section>
+        <script src="script.js"></script>
+    </body>
 </html>
