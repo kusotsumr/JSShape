@@ -105,6 +105,9 @@ form {
 }
 
 @media (max-width: 600px) {
+    html {
+        zoom: 1;
+    }
     body {
         background-image: url(saya4.jpg);
         background-size: cover;
@@ -114,5 +117,9 @@ form {
     section {
         flex-direction: column;
         gap: 4px;
+    }
+    #myCanvas {
+        max-width: 100%;
+        height: auto;
     }
 }
