@@ -8,6 +8,7 @@ function drawFigure(r) {
 
     r = 37 * (Math.log10(r) + 2);
 
+    //фигруа
     ctx.fillStyle = "#d158b3";
     ctx.beginPath();
     ctx.moveTo(0,0);
@@ -19,6 +20,7 @@ function drawFigure(r) {
     ctx.lineTo(0,0);
     ctx.fill();
 
+    //координаты
     const axisEnd =  Math.min(canvas.width, canvas.height) / 2 * 0.9;
     ctx.fillStyle = "#000000";
     ctx.lineWidth = 1;
@@ -29,30 +31,33 @@ function drawFigure(r) {
     ctx.lineTo(0, axisEnd);
     ctx.stroke();
 
-    const arrowSize = 8;
-    function drawArrow(tipX, tipY, dx, dy) {
-        ctx.strokeStyle = "black";
-        ctx.beginPath();
-        ctx.moveTo(tipX, tipY);
-        ctx.lineTo(tipX - dx*arrowSize - dy*arrowSize/2, tipY - dy*arrowSize + dx*arrowSize/2);
-        ctx.lineTo(tipX - dx*arrowSize + dy*arrowSize/2, tipY - dy*arrowSize - dx*arrowSize/2);
-        ctx.closePath();
-        ctx.fill();
-    }
-    drawArrow(axisEnd, 0, 1, 0);
-    drawArrow(0, axisEnd, 0, 1);
 
-    const tick = 5;
+    //стрелки
+    ctx.beginPath();
+    ctx.moveTo(axisEnd, 0);
+    ctx.lineTo(axisEnd - 8, -4);
+    ctx.lineTo(axisEnd - 8, 4);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(0, axisEnd);
+    ctx.lineTo(-4, axisEnd - 8);
+    ctx.lineTo(4, axisEnd - 8);
+    ctx.closePath();
+    ctx.fill();
+
+    //gпалки
     function drawTickX(x) {
         ctx.beginPath();
-        ctx.moveTo(x, -tick);
-        ctx.lineTo(x, tick);
+        ctx.moveTo(x, -5);
+        ctx.lineTo(x, 5);
         ctx.stroke();
     }
     function drawTickY(y) {
         ctx.beginPath();
-        ctx.moveTo(-tick, y);
-        ctx.lineTo(tick, y);
+        ctx.moveTo(-5, y);
+        ctx.lineTo(5, y);
         ctx.stroke();
     }
     drawTickX(r); drawTickX(r/2); drawTickX(-r); drawTickX(-r/2);
@@ -60,7 +65,6 @@ function drawFigure(r) {
 
     ctx.save();
     ctx.scale(1, -1);
-    ctx.fillStyle = "black";
     ctx.font = "12px sans-serif";
     ctx.fillText("R", r - 5, 15);
     ctx.fillText("R/2", r/2 - 8, 15);
@@ -73,6 +77,7 @@ function drawFigure(r) {
     ctx.restore();
 }
 drawFigure(5);
+
 //////////////
 function isInRectangle(x,y,r) {
     return x >= -r/2 && x <= 0 && y >=0 && y <= r;
@@ -129,7 +134,7 @@ function updateSubmitState() {
 ///////////
 let results = [];
 
-const saved = localStorage.getItem("results");
+const saved = localStorage.getItem("catlab-s501985-results");
 if (saved !== null) {
     results = JSON.parse(saved);
     for (const item of results) {
@@ -215,5 +220,5 @@ form.addEventListener("submit", function (event) {
 
     const resultObj = {x: x, y: y, r: r, hit: hit, dateText: formatted};
     results.push(resultObj);
-    localStorage.setItem("results", JSON.stringify(results));
+    localStorage.setItem("catlab-s501985-results", JSON.stringify(results));
 })
