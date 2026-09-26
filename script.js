@@ -11,13 +11,15 @@ function drawFigure(r) {
     //фигруа
     ctx.fillStyle = "#d158b3";
     ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineTo(-r/2, 0);
-    ctx.lineTo(-r/2,r);
+    ctx.moveTo(0,-r/2);
+    ctx.lineTo(-r, -r/2);
+    ctx.lineTo(-r,0);
+    ctx.lineTo(0,0);
     ctx.lineTo(0,r);
     ctx.arc(0,0,r,Math.PI /2,0, true);
-    ctx.lineTo(0, -r/2);
-    ctx.lineTo(0,0);
+    ctx.lineTo(r/2, 0)
+    ctx.lineTo(0, -r);
+    ctx.lineTo(0,-r/2);
     ctx.fill();
 
     //координаты
@@ -143,38 +145,37 @@ if (saved !== null) {
 }
 
 //////////////
-const xCheckboxes = document.querySelectorAll('input[name="x"]');
-let selectedCheckbox = '';
-xCheckboxes.forEach(function (checkbox) {
+let selectedX = '';
+const xButtons = document.querySelectorAll('.x-btn');
+xButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+        xButtons.forEach(function (other) {
+            other.classList.remove("selected");
+        });
+        button.classList.add("selected");
+
+        selectedX = button.dataset.value;
+    });
+});
+
+const yInput = document.getElementById("y-input");
+
+const rCheckboxes = document.querySelectorAll('input[name="r"]');
+let selectedR = '';
+rCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener("change", function () {
-        xCheckboxes.forEach(function (other) {
+        rCheckboxes.forEach(function (other) {
             if (checkbox.checked) {
-                selectedCheckbox = checkbox.value;
+                selectedR = checkbox.value;
             } else {
-                selectedCheckbox = '';
+                selectedR = '';
             }
 
             if (other !== checkbox) {
                 other.checked = false;
             }
         });
-
-    });
-});
-
-const yInput = document.getElementById("y-input");
-
-let selectedR = '';
-const rButtons = document.querySelectorAll('.r-btn');
-rButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-        rButtons.forEach(function (other) {
-            other.classList.remove("selected");
-        });
-        button.classList.add("selected");
-
-        selectedR = button.dataset.value;
-        updateSubmitState(selectedR);
+        updateSubmitState();
     });
 });
 
@@ -183,17 +184,22 @@ const form = document.getElementById("pointForm");
 form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const x = Number(selectedCheckbox);
+    if (selectedX === '') {
+        alert("Отметь икс пожалуста");
+        return;
+    }
+
+    if (selectedR === '') {
+        alert("Отметь R пожалуста");
+        return;
+    }
+
+    const x = Number(selectedX);
     const y = Number(yInput.value);
     const r = Number(selectedR);
 
-    if (selectedCheckbox === '') {
-        alert("Отметь икс пожалуста");
-        return
-    }
-
-    if (y < -3 || y > 5) {
-        alert("Привет игрик должен быть от -3 до 5");
+    if (y < -3 || y > 3) {
+        alert("Привет игрик должен быть от -3 до 3");
         return;
     }
 
@@ -202,6 +208,7 @@ form.addEventListener("submit", function (event) {
         return;
 
     }
+
     ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
     drawFigure(r);
 
@@ -216,7 +223,7 @@ form.addEventListener("submit", function (event) {
     });
     const formatted = formatter.format(now);
 
-    addResultRow(x, y, r,hit, formatted);
+    addResultRow(x, y, r, hit, formatted);
 
     const resultObj = {x: x, y: y, r: r, hit: hit, dateText: formatted};
     results.push(resultObj);
