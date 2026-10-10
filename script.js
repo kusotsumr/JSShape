@@ -3,6 +3,34 @@ const ctx = canvas.getContext("2d");
 ctx.translate(canvas.width / 2, canvas.height / 2);
 ctx.scale(1, -1);
 
+async function loadResults() {
+    const response = await fetch("/fcgi-bin/hello-world.jar", {
+        method: "GET",
+    });
+    if (!response.ok) {
+        console.log("Ошибка" + response.status);
+        return
+    }
+    const data = await response.json();
+
+    document.querySelector("#resultsTable tbody").innerHTML = "";
+    for (const item of data.results) {
+        const parts = item.split(",");
+
+        const x = Number(parts[0]);
+        const y = Number(parts[1]);
+        const r = Number(parts[2]);
+        const hit = parts[3] === "true";
+        const dateText = parts[4];
+
+        addResultRow(x, y, r, hit, dateText);
+    }
+
+    document.getElementById("server-info").textContent =
+        "Время сервера: " + new Date(data.serverTime).toLocaleString("ru-RU") +
+        ", время работы скрипта: " + data.execMs.toFixed(3) + " мс";
+}
+
 function drawFigure(r) {
     ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
 
@@ -78,23 +106,8 @@ function drawFigure(r) {
     ctx.fillText("-R/2", 8, r/2 + 12);
     ctx.restore();
 }
-drawFigure(5);
 
 //////////////
-function isInRectangle(x,y,r) {
-    return x >= -r/2 && x <= 0 && y >=0 && y <= r;
-}
-function isInCircle(x,y,r) {
-    return x >=0 && x*x + y*y <= r*r && y >= 0;
-}
-function isInTriangle(x,y,r) {
-    return x <= r && x >= 0 && y <= 0 && y >= -r/2 && y >= x/2 - r/2;
-}
-
-function isInFigure(x, y, r) {
-    return isInRectangle(x, y, r) || isInCircle(x, y, r) || isInTriangle(x, y, r);
-}
-
 function addResultRow(x, y, r, hit, dateText) {
     const tbody = document.querySelector("#resultsTable tbody");
     const row = document.createElement("tr");
@@ -134,16 +147,8 @@ function updateSubmitState() {
     }
 }
 ///////////
-let results = [];
-
-const saved = localStorage.getItem("catlab-s501985-results");
-if (saved !== null) {
-    results = JSON.parse(saved);
-    for (const item of results) {
-        addResultRow(item.x, item.y, item.r, item.hit, item.dateText);
-    }
-}
-
+drawFigure(5);
+loadResults();
 //////////////
 let selectedX = '';
 const xButtons = document.querySelectorAll('.x-btn');
@@ -181,9 +186,8 @@ rCheckboxes.forEach(function (checkbox) {
 
 //////////////
 const form = document.getElementById("pointForm");
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
     event.preventDefault();
-
     if (selectedX === '') {
         alert("Отметь икс пожалуста");
         return;
@@ -194,8 +198,13 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
+    const yText = yInput.value.trim();
+    if (yText === "" || isNaN(Number(yText))) {
+        alert("Y должен быть числом");
+        return;
+    }
     const x = Number(selectedX);
-    const y = Number(yInput.value);
+    const y = Number(yText);
     const r = Number(selectedR);
 
     if (y < -3 || y > 3) {
@@ -209,23 +218,26 @@ form.addEventListener("submit", function (event) {
 
     }
 
+    const response = await fetch("/fcgi-bin/hello-world.jar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            x: x,
+            y: y,
+            r: r
+        })
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        alert("Ошибка сервера: " + errorText);
+        return;
+    }
+
     ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
     drawFigure(r);
 
-
-    const hit = isInFigure(x, y, r);
-    console.log("Точка попала в фигуру:", hit);
-
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat("ru-RU",{
-        dateStyle: "medium",
-        timeStyle: "medium",
-    });
-    const formatted = formatter.format(now);
-
-    addResultRow(x, y, r, hit, formatted);
-
-    const resultObj = {x: x, y: y, r: r, hit: hit, dateText: formatted};
-    results.push(resultObj);
-    localStorage.setItem("catlab-s501985-results", JSON.stringify(results));
+    await loadResults();
 })
