@@ -50,21 +50,25 @@
 
         <canvas id="myCanvas" width="400" height="300"></canvas>
     </div>
-    <table id="resultsTable">
-        <thead>
-        <tr>
-            <th>X</th>
-            <th>Y</th>
-            <th>R</th>
-            <th>Результат</th>
-            <th>Дата и время</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-    <p id="server-info"></p>
+    <div class="results">
+        <div class="table-wrap">
+            <table id="resultsTable">
+                <thead>
+                <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>R</th>
+                    <th>Результат</th>
+                    <th>Дата и время</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <p id="server-time"></p>
+        <p id="exec-time"></p>
+    </div>
 </section>
 <script src="script.js"></script>
 </body>

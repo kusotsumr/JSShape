@@ -21,14 +21,15 @@ async function loadResults() {
         const y = Number(parts[1]);
         const r = Number(parts[2]);
         const hit = parts[3] === "true";
-        const dateText = parts[4];
+        const dateText = new Date(Number(parts[4])).toLocaleString("ru-RU");
 
         addResultRow(x, y, r, hit, dateText);
     }
 
-    document.getElementById("server-info").textContent =
-        "Время сервера: " + new Date(data.serverTime).toLocaleString("ru-RU") +
-        ", время работы скрипта: " + data.execMs.toFixed(3) + " мс";
+    document.getElementById("server-time").textContent =
+        "Время сервера: " + new Date(data.serverTime).toLocaleString("ru-RU");
+    document.getElementById("exec-time").textContent =
+        "Время работы скрипта: " + data.execMs.toFixed(3) + " мс";
 }
 
 function drawFigure(r) {
