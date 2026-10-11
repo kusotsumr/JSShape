@@ -112,6 +112,11 @@ form {
     width: 100%;
 }
 
+#resultsTable tfoot td {
+    text-align: left;
+    font-size: 14px;
+}
+
 @media (max-width: 600px) {
     html {
         zoom: 1;

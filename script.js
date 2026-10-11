@@ -21,15 +21,11 @@ async function loadResults() {
         const y = Number(parts[1]);
         const r = Number(parts[2]);
         const hit = parts[3] === "true";
-        const dateText = new Date(Number(parts[4])).toLocaleString("ru-RU");
+        const serverTime = new Date(Number(parts[4])).toLocaleString("ru-RU");
+        const execMs = Number(parts[5]).toFixed(3);
 
-        addResultRow(x, y, r, hit, dateText);
+        addResultRow(x, y, r, hit, serverTime, execMs);
     }
-
-    document.getElementById("server-time").textContent =
-        "Время сервера: " + new Date(data.serverTime).toLocaleString("ru-RU");
-    document.getElementById("exec-time").textContent =
-        "Время работы скрипта: " + data.execMs.toFixed(3) + " мс";
 }
 
 function drawFigure(r) {
@@ -109,30 +105,17 @@ function drawFigure(r) {
 }
 
 //////////////
-function addResultRow(x, y, r, hit, dateText) {
+function addResultRow(x, y, r, hit, serverTime, execMs) {
     const tbody = document.querySelector("#resultsTable tbody");
     const row = document.createElement("tr");
     row.className = hit ? "row-hit" : "row-not-hit";
 
-    const xCell = document.createElement("td");
-    xCell.textContent = x;
-    row.appendChild(xCell);
-
-    const yCell = document.createElement("td");
-    yCell.textContent = y;
-    row.appendChild(yCell);
-
-    const rCell = document.createElement("td");
-    rCell.textContent = r;
-    row.appendChild(rCell);
-
-    const hitCell = document.createElement("td");
-    hitCell.textContent = hit ? "Входит" : "Не входит";
-    row.appendChild(hitCell);
-
-    const dataCell = document.createElement("td");
-    dataCell.textContent = dateText;
-    row.appendChild(dataCell);
+    const values = [x, y, r, hit ? "Входит" : "Не входит", serverTime, execMs];
+    for (const value of values) {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+    }
     tbody.appendChild(row);
 }
 
