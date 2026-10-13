@@ -117,6 +117,11 @@ form {
     font-size: 14px;
 }
 
+.x-btn.selected {
+    background-color: #d384ae;
+    color: #ffc0e2;
+}
+
 @media (max-width: 600px) {
     html {
         zoom: 1;

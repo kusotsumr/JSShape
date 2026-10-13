@@ -2,6 +2,8 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 ctx.translate(canvas.width / 2, canvas.height / 2);
 ctx.scale(1, -1);
+let currentR = 5;
+let points = [];
 
 async function loadResults() {
     const response = await fetch("/fcgi-bin/hello-world.jar", {
@@ -9,11 +11,12 @@ async function loadResults() {
     });
     if (!response.ok) {
         console.log("Ошибка" + response.status);
-        return
+        return;
     }
     const data = await response.json();
 
     document.querySelector("#resultsTable tbody").innerHTML = "";
+    points = [];
     for (const item of data.results) {
         const parts = item.split(",");
 
@@ -25,7 +28,10 @@ async function loadResults() {
         const execMs = Number(parts[5]).toFixed(3);
 
         addResultRow(x, y, r, hit, serverTime, execMs);
+        points.push({ x: x, y: y, hit: hit });
     }
+
+    redraw(currentR);
 }
 
 function drawFigure(r) {
@@ -104,6 +110,22 @@ function drawFigure(r) {
     ctx.restore();
 }
 
+function redraw(r) {
+    currentR = r;
+    drawFigure(r);
+    drawPoints();
+}
+
+function drawPoints() {
+    const rPx = 37 * (Math.log10(currentR) + 2);
+    const k = rPx / currentR;
+    for (const p of points) {
+        ctx.beginPath();
+        ctx.arc(p.x * k, p.y * k, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = p.hit ? "green" : "red";
+        ctx.fill();
+    }
+}
 //////////////
 function addResultRow(x, y, r, hit, serverTime, execMs) {
     const tbody = document.querySelector("#resultsTable tbody");
@@ -131,7 +153,7 @@ function updateSubmitState() {
     }
 }
 ///////////
-drawFigure(5);
+redraw(5);
 loadResults();
 //////////////
 let selectedX = '';
@@ -220,8 +242,6 @@ form.addEventListener("submit", async function (event) {
         return;
     }
 
-    ctx.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-    drawFigure(r);
-
+    currentR = r;
     await loadResults();
 })
